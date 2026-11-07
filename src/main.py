@@ -14,6 +14,7 @@ from historique import (
     mois_le_moins_cher,
     variations_black_friday,
 )
+from graphiques import graphique_historique, graphique_produit
 
 
 def main():
@@ -73,6 +74,9 @@ def main():
 
     mois_indices = mois_le_moins_cher(historique)
     variations_detaillees = variations_black_friday(historique)
+    graphique_produit(index, "P12", "output/comparaison_P12.png")
+    graphique_historique(historique, "P11", "output/historique_P11.png")
+
     with open("output/black_friday.csv", "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(
             f,
