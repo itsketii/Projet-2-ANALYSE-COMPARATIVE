@@ -1,0 +1,16 @@
+[Marché Lagune] ML-1000 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1014 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1049 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1000 : doublon détecté → ligne ignorée
+[Marché Lagune] ML-1084 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1119 : prix invalide ou absent (Prix sur demande) → prix_paye = None
+[Marché Lagune] ML-1147 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1168 : prix invalide ou absent () → prix_paye = None
+[Marché Lagune] ML-1168 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1147 : doublon détecté → ligne ignorée
+[Baobab Shop] BB03433 : produit en rupture → en_stock = False
+[Baobab Shop] BB16464 : produit en rupture → en_stock = False
+[Baobab Shop] BB27999 : prix invalide ou absent (None) → prix_paye = None
+[Baobab Shop] BB30124 : produit en rupture → en_stock = False
+[Comptoir Ivoire] CI214 : produit en rupture → en_stock = False
+[Comptoir Ivoire] CI217 : produit en rupture → en_stock = False
