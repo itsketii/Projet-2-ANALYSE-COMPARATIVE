@@ -14,3 +14,11 @@
 [Baobab Shop] BB30124 : produit en rupture → en_stock = False
 [Comptoir Ivoire] CI214 : produit en rupture → en_stock = False
 [Comptoir Ivoire] CI217 : produit en rupture → en_stock = False
+[Marché Lagune] ML-1021 (P04) : prix aberrant (779000 vs médiane 76300)
+[Comparatif] P03 (Samsung Galaxy A55 256 Go) : non comparable (Marché Lagune: rupture, Baobab Shop: rupture)
+[Comparatif] P08 (Itel A70 64 Go) : non comparable (Marché Lagune: rupture, Comptoir Ivoire: un seul prix exploitable)
+[Comparatif] P13 (Dell Inspiron 15 Core i5 16 Go 512 Go) : non comparable (Marché Lagune: rupture, Comptoir Ivoire: un seul prix exploitable)
+[Comparatif] P19 (Écran Samsung 24 pouces) : non comparable (Marché Lagune: prix absent, Baobab Shop: un seul prix exploitable)
+[Comparatif] P25 (Ventilateur sur pied Binatone 16 pouces) : non comparable (Marché Lagune: un seul prix exploitable, Comptoir Ivoire: rupture)
+[Comparatif] P30 (Climatiseur Hisense 1,5 CV) : non comparable (Marché Lagune: un seul prix exploitable, Baobab Shop: rupture)
+[Comparatif] P18 (Routeur TP-Link Archer C6) : non comparable (Baobab Shop: un seul prix exploitable)
