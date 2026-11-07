@@ -38,7 +38,7 @@ def tokeniser(nom_norm):
 
   s = re.sub(r"(\d),(\d)", r"\1.\2", str(nom_norm))
 
-  mots_bruts = re.findall(r"\d+\.\d+|\d+|[a-z]+", s.lower())
+  mots_bruts = re.findall(r"\d+\.\d+|[a-z]+\d+|\d+|[a-z]+", s.lower())
 
   tokens = set()
   for mot in mots_bruts:
