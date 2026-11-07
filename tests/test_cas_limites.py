@@ -3,7 +3,9 @@ import unittest
 
 sys.path.insert(0, "src")
 from nettoyage import nettoyer_prix, normaliser_nom, verifier_stock
-from rapprochement import tokeniser, trouver_produit
+from comparaison import comparer
+from panier import calculer_panier
+from rapprochement import detecter_aberrants, tokeniser, trouver_produit
 
 
 class TestCasLimites(unittest.TestCase):
@@ -41,6 +43,58 @@ class TestCasLimites(unittest.TestCase):
     tokens2 = tokeniser("Galaxy A15 128GB - Samsung")
     pid2, _ = trouver_produit(tokens2, catalogue)
     self.assertEqual(pid2, "P01")
+
+  def test_comparatif_produit_exclusif_absent(self):
+    index = {
+        "P99": {
+            "Marché Lagune": {"en_stock": True, "prix_paye": 1000},
+        }
+    }
+    journal = []
+    resultats = comparer(index, {"P99": "Produit exclusif"}, journal)
+    self.assertEqual(resultats, [])
+    self.assertIn("non comparable", journal[0])
+
+  def test_comparatif_egalite(self):
+    index = {
+        "P16": {
+            "Marché Lagune": {"en_stock": True, "prix_paye": 1000},
+            "Baobab Shop": {"en_stock": True, "prix_paye": 1000},
+            "Comptoir Ivoire": {"en_stock": True, "prix_paye": 1200},
+        }
+    }
+    resultats = comparer(index, {"P16": "Produit égalité"}, [])
+    self.assertEqual(
+        resultats[0]["meilleures_boutiques_liste"],
+        ["Marché Lagune", "Baobab Shop"],
+    )
+
+  def test_prix_aberrant_mis_a_none(self):
+    index = {
+        "P01": {
+            "Marché Lagune": {
+                "id_source": "ML-1021",
+                "prix_paye": 1000000,
+            },
+            "Baobab Shop": {"id_source": "B-01", "prix_paye": 100000},
+            "Comptoir Ivoire": {"id_source": "CI-01", "prix_paye": 110000},
+        }
+    }
+    detecter_aberrants(index, [])
+    self.assertIsNone(index["P01"]["Marché Lagune"]["prix_paye"])
+
+  def test_panier_lagune_incomplet(self):
+    index = {
+        "P04": {
+            "Baobab Shop": {"en_stock": True, "prix_paye": 75000},
+        },
+        "P12": {
+            "Marché Lagune": {"en_stock": True, "prix_paye": 300000},
+        },
+    }
+    panier = calculer_panier(index, {"P04": 1, "P12": 1})
+    self.assertIsNone(panier["totaux_par_boutique"]["Marché Lagune"])
+    self.assertEqual(panier["articles_manquants"]["Marché Lagune"], ["P04"])
 
 
 if __name__ == "__main__":
