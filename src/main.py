@@ -81,8 +81,16 @@ def main():
 
     mois_resultats = mois_le_moins_cher(hist)
 
-    graphique_produit(index, "P12", DOSSIER_SORTIE / "comparaison_P12.png")
-    graphique_historique(hist, "P11", DOSSIER_SORTIE / "historique_P11.png")
+    graphique_produit(
+        index,
+        "P12",
+        str(DOSSIER_SORTIE / "comparaison_P12.png"),
+    )
+    graphique_historique(
+        hist,
+        "P11",
+        str(DOSSIER_SORTIE / "historique_P11.png"),
+    )
 
     with open(
         DOSSIER_SORTIE / "black_friday.csv",
