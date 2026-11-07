@@ -22,3 +22,4 @@
 [Comparatif] P25 (Ventilateur sur pied Binatone 16 pouces) : non comparable (Marché Lagune: un seul prix exploitable, Comptoir Ivoire: rupture)
 [Comparatif] P30 (Climatiseur Hisense 1,5 CV) : non comparable (Marché Lagune: un seul prix exploitable, Baobab Shop: rupture)
 [Comparatif] P18 (Routeur TP-Link Archer C6) : non comparable (Baobab Shop: un seul prix exploitable)
+[Historique] 20876 lignes lues, 0 anomalie(s)
