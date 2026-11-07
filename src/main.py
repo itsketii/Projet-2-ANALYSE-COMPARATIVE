@@ -1,27 +1,39 @@
 import csv
-import os
 import time
+from pathlib import Path
 from collecte import charger_lagune, charger_baobab, charger_comptoir
 from nettoyage import nettoyer
 from rapprochement import charger_catalogue, construire_index, detecter_aberrants
 from comparaison import comparer, exporter_csv
 from synthese import calculer_victoires, calculer_ecarts_moyens, top_gains
 from panier import calculer_panier
-from historique import charger_historique, analyser_black_friday, mois_le_moins_cher
+from historique import (
+    analyser_black_friday,
+    charger_historique,
+    mesurer_analyse_naive,
+    mois_le_moins_cher,
+    variations_black_friday,
+)
 from graphiques import graphique_produit, graphique_historique
+
+
+RACINE_PROJET = Path(__file__).resolve().parent.parent
+DOSSIER_DONNEES = RACINE_PROJET / "data"
+DOSSIER_SORTIE = RACINE_PROJET / "output"
+
 
 def main():
     journal = []
 
     lignes_brutes = (
-        charger_lagune("data/marche_lagune.csv") +
-        charger_baobab("data/baobab_shop.json") +
-        charger_comptoir("data/comptoir_ivoire.xlsx")
+        charger_lagune(DOSSIER_DONNEES / "marche_lagune.csv") +
+        charger_baobab(DOSSIER_DONNEES / "baobab_shop.json") +
+        charger_comptoir(DOSSIER_DONNEES / "comptoir_ivoire.xlsx")
     )
 
     lignes_propres = nettoyer(lignes_brutes, journal)
 
-    catalogue_path = "data/catalogue_reference.csv"
+    catalogue_path = DOSSIER_DONNEES / "catalogue_reference.csv"
     catalogue = charger_catalogue(catalogue_path)
 
     noms_catalogue = {}
@@ -35,8 +47,8 @@ def main():
 
     resultats_comparatif = comparer(index, noms_catalogue, journal)
 
-    os.makedirs("output", exist_ok=True)
-    exporter_csv(resultats_comparatif, "output/comparatif.csv")
+    DOSSIER_SORTIE.mkdir(exist_ok=True)
+    exporter_csv(resultats_comparatif, DOSSIER_SORTIE / "comparatif.csv")
 
     victoires = calculer_victoires(resultats_comparatif)
     ecarts_moyens = calculer_ecarts_moyens(resultats_comparatif)
@@ -53,17 +65,40 @@ def main():
     total_opt = panier["total_optimise"]
 
     t0 = time.perf_counter()
-    hist = charger_historique("data/historique_prix.csv", journal)
+    hist = charger_historique(DOSSIER_DONNEES / "historique_prix.csv", journal)
     t1 = time.perf_counter()
     temps_index = t1 - t0
 
+    t2 = time.perf_counter()
     bf_resultats = analyser_black_friday(hist)
+    t3 = time.perf_counter()
+    temps_indexe = t3 - t2
+
+    t4 = time.perf_counter()
+    mesurer_analyse_naive(hist)
+    t5 = time.perf_counter()
+    temps_naif = t5 - t4
+
     mois_resultats = mois_le_moins_cher(hist)
 
-    graphique_produit(index, "P12", "output/comparaison_P12.png")
-    graphique_historique(hist, "P11", "output/historique_P11.png")
+    graphique_produit(index, "P12", DOSSIER_SORTIE / "comparaison_P12.png")
+    graphique_historique(hist, "P11", DOSSIER_SORTIE / "historique_P11.png")
 
-    with open("output/journal_nettoyage.txt", "w", encoding="utf-8") as f:
+    with open(
+        DOSSIER_SORTIE / "black_friday.csv",
+        "w",
+        encoding="utf-8-sig",
+        newline="",
+    ) as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=["source", "produit_id", "variation_pct"],
+            delimiter=";",
+        )
+        writer.writeheader()
+        writer.writerows(variations_black_friday(hist))
+
+    with open(DOSSIER_SORTIE / "journal_nettoyage.txt", "w", encoding="utf-8") as f:
         for message in journal:
             f.write(message + "\n")
 
@@ -116,8 +151,8 @@ def main():
     print("\n [7] TEMPS D'EXÉCUTION")
     print("-" * 65)
     print(f"   • Lecture + indexation : {temps_index:.6f} s")
-    print(f"   • Analyse indexée      : 0.010688 s")
-    print(f"   • Approche naïve       : 0.220327 s")
+    print(f"   • Analyse indexée      : {temps_indexe:.6f} s")
+    print(f"   • Approche naïve       : {temps_naif:.6f} s")
     print("=" * 65 + "\n")
 
 
