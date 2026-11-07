@@ -49,6 +49,7 @@ def comparer(index, noms_catalogue, journal):
             "prix_baobab": p.get("Baobab Shop", ""),
             "prix_comptoir": p.get("Comptoir Ivoire", ""),
             "meilleure_boutique": meilleure_boutique_str,
+            "meilleures_boutiques_liste": meilleures_boutiques,
             "prix_min": prix_min,
             "prix_moyen": prix_moyen,
             "ecart_fcfa": ecart_fcfa,
@@ -64,8 +65,10 @@ def exporter_csv(lignes, chemin):
     """Exporte les résultats comparatifs dans un fichier CSV avec séparateur point-virgule."""
     if not lignes:
         return
-    colonnes = list(lignes[0].keys())
+    colonnes_exclues = {"meilleures_boutiques_liste"}
+    colonnes = [c for c in lignes[0] if c not in colonnes_exclues]
     with open(chemin, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=colonnes, delimiter=";")
         writer.writeheader()
-        writer.writerows(lignes)
+        for ligne in lignes:
+            writer.writerow({cle: valeur for cle, valeur in ligne.items() if cle in colonnes})
