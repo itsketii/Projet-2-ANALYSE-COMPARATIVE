@@ -8,3 +8,7 @@ __pycache__/
 
 # Dossier de documentation/documents personnels
 docs/
+
+
+# Gestion des grapiques générés
+output/*.png
